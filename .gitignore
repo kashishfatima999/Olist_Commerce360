@@ -1,0 +1,29 @@
+# --- AI assistant local context (never committed) ---
+CLAUDE.md
+.claude/settings.local.json
+
+# --- Raw / large data (download from Kaggle, see 02_Data/README.md) ---
+02_Data/raw_data/*
+!02_Data/raw_data/.gitkeep
+*.zip
+
+# --- Secrets / local config ---
+.env
+*.env
+config.local.*
+.kaggle/
+kaggle.json
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# --- Office / OS temp files ---
+~$*
+*.tmp
+.DS_Store
+Thumbs.db
+desktop.ini
