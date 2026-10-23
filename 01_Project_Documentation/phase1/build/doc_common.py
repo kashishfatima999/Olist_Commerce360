@@ -13,22 +13,37 @@ from reportlab.platypus import (Image, KeepTogether, PageBreak, Paragraph, Simpl
 
 import model_spec as m
 
-OUTDIR = Path(__file__).resolve().parents[1]
-FONTS = Path("C:/Windows/Fonts")
+import os
 
-try:
-    pdfmetrics.registerFont(TTFont("Body", str(FONTS / "calibri.ttf")))
-    pdfmetrics.registerFont(TTFont("Body-Bold", str(FONTS / "calibrib.ttf")))
-    pdfmetrics.registerFont(TTFont("Body-Italic", str(FONTS / "calibrii.ttf")))
-    pdfmetrics.registerFont(TTFont("Body-BoldItalic", str(FONTS / "calibriz.ttf")))
-    from reportlab.lib.fonts import addMapping
-    addMapping("Body", 0, 0, "Body")
-    addMapping("Body", 1, 0, "Body-Bold")
-    addMapping("Body", 0, 1, "Body-Italic")
-    addMapping("Body", 1, 1, "Body-BoldItalic")
-    BODY, BOLD = "Body", "Body-Bold"
-except Exception:  # fallback if Calibri is not installed
-    BODY, BOLD = "Helvetica", "Helvetica-Bold"
+from reportlab import rl_config
+from reportlab.lib.fonts import addMapping
+
+rl_config.invariant = 1  # fixed creation date / document ID -> byte-identical rebuilds
+
+# PHASE1_OUTDIR lets CI rebuild into a temporary folder and compare with the committed files.
+OUTDIR = Path(os.environ.get("PHASE1_OUTDIR", Path(__file__).resolve().parents[1]))
+
+# Calibri on Windows; Carlito (metric-compatible with Calibri, same line breaks) on Linux CI.
+FONT_CANDIDATES = [
+    ("Calibri", Path("C:/Windows/Fonts"), ("calibri.ttf", "calibrib.ttf", "calibrii.ttf", "calibriz.ttf")),
+    ("Carlito", Path(os.environ.get("CARLITO_DIR", "/usr/share/fonts/truetype/crosextra")),
+     ("Carlito-Regular.ttf", "Carlito-Bold.ttf", "Carlito-Italic.ttf", "Carlito-BoldItalic.ttf")),
+]
+if os.environ.get("PHASE1_FONT"):  # e.g. PHASE1_FONT=Carlito to reproduce the CI build on Windows
+    FONT_CANDIDATES = [c for c in FONT_CANDIDATES if c[0] == os.environ["PHASE1_FONT"]]
+
+FONT_FAMILY = "Helvetica"
+BODY, BOLD = "Helvetica", "Helvetica-Bold"
+for family, folder, files in FONT_CANDIDATES:
+    if all((folder / f).exists() for f in files):
+        for face, f in zip(("Body", "Body-Bold", "Body-Italic", "Body-BoldItalic"), files):
+            pdfmetrics.registerFont(TTFont(face, str(folder / f)))
+        addMapping("Body", 0, 0, "Body")
+        addMapping("Body", 1, 0, "Body-Bold")
+        addMapping("Body", 0, 1, "Body-Italic")
+        addMapping("Body", 1, 1, "Body-BoldItalic")
+        FONT_FAMILY, BODY, BOLD = family, "Body", "Body-Bold"
+        break
 
 NAVY = colors.HexColor("#1F3864")
 LIGHT = colors.HexColor("#DDEBF7")
@@ -98,13 +113,20 @@ def kv_table(rows, widths=(4.2, 12.8)):
     return t
 
 
-TEAM_ROWS = [
-    ("Member 1 - Warehouse & integration lead", "[Name] - [Student ID]"),
-    ("Member 2 - Business analysis & modeling lead", "[Name - proposed: Khadija] - [Student ID]"),
-    ("Member 3 - Analytics & BI lead", "[Name] - [Student ID]"),
-    ("Course / section", f"{m.COURSE} - [Section]"),
-    ("Instructor", "[Instructor name]"),
-    ("Submission date", "25 October 2026"),
+# Team details as supplied by Kashish Fatima on 2026-10-24 (see decision log DEC-026).
+TEAM = [  # (name, roll number)
+    ("Kashish Fatima", "24L-2605"),
+    ("Khadija Faiz", "24L-2554"),
+    ("Aliyah Rasheed", "24L-2544"),
+]
+SECTION = "BDS5A"
+INSTRUCTOR = "Esha Tur Razia Babar"
+SUBMISSION_DATE = "25 October 2026"
+
+TEAM_ROWS = [(f"Team member {i}", f"{name} ({roll})") for i, (name, roll) in enumerate(TEAM, 1)] + [
+    ("Course / section", f"{m.COURSE} - Section {SECTION}"),
+    ("Instructor", INSTRUCTOR),
+    ("Submission date", SUBMISSION_DATE),
 ]
 
 

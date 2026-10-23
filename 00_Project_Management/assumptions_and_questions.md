@@ -23,8 +23,8 @@ Evidence comes from `02_Data/profiling/profiling_report.md` (Kaggle dataset vers
 ## Open questions (Q-NN)
 | ID | Question | Who decides | Status |
 |----|----------|-------------|--------|
-| Q-01 | Third member's name; Kashish's role (M1 or M3); student IDs | Team | **Open**: placeholders are used in all PDFs |
+| Q-01 | Third member's name; Kashish's role (M1 or M3); student IDs | Team | Names, roll numbers, section and instructor resolved by DEC-026. **Open:** which of Kashish and Aliyah leads M1 vs M3 (the PDFs list roles without names, so submission is not blocked) |
 | Q-02 | One combined PDF or separate files? | Team / instructor | Resolved by DEC-024: separate files (confirm with instructor if unsure) |
 | Q-03 | Should revenue exclude canceled/unavailable orders? | M2 + M3 | Resolved by DEC-016 |
 | Q-04 | Should sparse edge months be excluded from trends? | M2 | Resolved by DEC-017 |
-| Q-05 | Is a cover template mandated (IDs, section)? | Team | **Open**: placeholder cover used (DEC-024) |
+| Q-05 | Is a cover template mandated (IDs, section)? | Team | Resolved: covers show names, roll numbers, section and instructor (DEC-026). The instructor has not stated a mandated template |

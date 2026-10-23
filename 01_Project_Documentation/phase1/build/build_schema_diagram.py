@@ -3,6 +3,7 @@
 Page 1: physical star schema (all tables, columns, types, PK/FK, measures, grain, cardinality).
 Page 2: conceptual model (business processes and dimensions) and bus matrix.
 """
+import os
 import textwrap
 from pathlib import Path
 
@@ -12,7 +13,7 @@ from reportlab.pdfgen import canvas
 
 import model_spec as m
 
-OUTDIR = Path(__file__).resolve().parents[1]
+OUTDIR = Path(os.environ.get("PHASE1_OUTDIR", Path(__file__).resolve().parents[1]))
 PDF = OUTDIR / "P1_06_Star_Schema.pdf"
 PNG = OUTDIR / "P1_06_Star_Schema.png"
 PNG_CONCEPT = OUTDIR / "P1_06_Conceptual_Model.png"
@@ -329,7 +330,7 @@ def write_dbml():
 
 
 def main():
-    c = canvas.Canvas(str(PDF), pagesize=(W, H))
+    c = canvas.Canvas(str(PDF), pagesize=(W, H), invariant=1)  # reproducible bytes
     c.setTitle(f"{m.PROJECT} - Star Schema")
     page_physical(c)
     c.showPage()

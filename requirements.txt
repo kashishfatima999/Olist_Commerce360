@@ -1,0 +1,6 @@
+# Build and test dependencies for the Phase 1 documents (used by CI).
+# Pinned to the versions the committed artifacts were generated with.
+reportlab==5.0.1
+openpyxl==3.1.5
+pymupdf==1.28.2
+# Local-only: 02_Data/profiling/profile_source.py also needs pandas and the raw Kaggle CSVs.

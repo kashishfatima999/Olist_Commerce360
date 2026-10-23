@@ -5,7 +5,9 @@
 - **M2:** Business analysis & modeling lead (suggested: Khadija)
 - **M3:** Analytics & BI lead
 
-Names are confirmed for Kashish and Khadija. The third member's name and the role assignment are still needed (Q-01).
+**Team:** Kashish Fatima (24L-2605), Khadija Faiz (24L-2554), Aliyah Rasheed (24L-2544).
+
+Khadija is the proposed M2. The team still needs to assign M1 and M3 between Kashish and Aliyah (Q-01).
 
 Status values: Todo, In progress, Review, Done.
 
@@ -25,9 +27,11 @@ All seven deliverables were drafted from one model specification (DEC-015, DEC-0
 | P1-08 | Grain Definition Document | Claude | M1 | — | P1-03 | `P1_05_Grain_Definition.pdf` | Review |
 | P1-09 | Star schema diagram | Claude | M1 | — | P1-07 | `P1_06_Star_Schema.pdf/.png/.dbml` | Review |
 | P1-10 | Data Dictionary | Claude | M1 | — | P1-07 | `P1_07_Data_Dictionary.xlsx` | Review |
-| P1-11 | Automated consistency validation (252 checks) | Claude | M3 | — | P1-04 to P1-10 | `build/validation_report.md` | Done (0 failures) |
+| P1-11 | Automated consistency validation (269 checks) | Claude | M3 | — | P1-04 to P1-10 | `build/validation_report.md` | Done (0 failures) |
 | P1-12 | Team walk-through: each member explains the model in 5 minutes | All | All | 30 min | P1-11 | Daily log note | Todo |
-| P1-13 | Fill in names, IDs and section in `build/doc_common.py` (TEAM_ROWS); rebuild; commit, push, submit | Kashish | Kashish | 20 min | P1-12 | PR to `main` + submission | Todo |
+| P1-13 | Fill in names, IDs and section in `build/doc_common.py`; rebuild | Claude | Kashish | — | — | Rebuilt PDFs and xlsx | Done |
+| P1-14 | GitHub Actions CI (validation + unit, structure and rebuild tests) | Claude | M3 | — | P1-13 | `.github/workflows/phase1-ci.yml`, `tests/` | Done locally; remote run pending push |
+| P1-15 | Commit, push, open PR, confirm CI is green, merge, submit | Kashish | Kashish | 15 min | P1-14 | PR to `main` + submission | Todo |
 
 ## Phase 1 review assignments (about 45 minutes each)
 

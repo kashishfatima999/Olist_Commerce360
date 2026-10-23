@@ -170,3 +170,42 @@ DEC-005 to DEC-014 were proposed on 2026-10-24 before the dataset was available.
 ### DEC-024: Phase 1 document format and administrative placeholders (resolves Q-02, Q-05)
 - **Status:** Accepted (by Claude under Kashish's delegated approval, 2026-10-24; team confirms at walk-through P1-12)
 - **Decision:** The course lists seven deliverables, so they are produced as seven separate files, P1_01 to P1_07. Student names, IDs, section and instructor are shown as `[placeholders]`. Khadija is shown only as the *proposed* Member 2 and the team must fill in the rest before submission. All files are generated from `build/model_spec.py` so they stay consistent.
+
+---
+
+## Phase 1 finalisation and CI (2026-10-24, session 3)
+
+### DEC-025: GitHub Actions CI with content-based rebuild check
+- **Date:** 2026-10-24 | **Proposed by:** Claude | **Status:** Accepted (task requested by Kashish)
+- **Context:** The deliverables are generated files. CI must prove they are valid and up to date without the raw Olist CSVs, which are git-ignored.
+- **Decision:**
+  - `.github/workflows/phase1-ci.yml` runs on push, pull_request and workflow_dispatch, on Ubuntu 24.04 with Python 3.12.
+  - It installs the pinned `requirements.txt` (reportlab, openpyxl, pymupdf).
+  - It runs `validate_phase1.py` and then `python -m unittest discover -s tests`. The tests use the standard library only, so there is no pytest dependency.
+- **Rebuild check:** `tests/test_rebuild.py` rebuilds into a temporary folder and compares page text, workbook cell values, DBML text and image sizes with the committed files. It compares content, not bytes, because CI uses the font Carlito instead of Calibri.
+  - Carlito has the same character widths as Calibri, so line breaks match. Local test with Carlito forced: identical page text.
+  - Builds are byte-identical on one machine: reportlab invariant mode, plus fixed xlsx metadata and zip timestamps.
+- **Evidence the test works:** changing one description in `model_spec.py` without rebuilding made 3 rebuild tests fail. Restoring the file made them pass again.
+
+### DEC-026: Team details on covers
+- **Status:** Accepted (details supplied by Kashish on 2026-10-24)
+- **Decision:** The covers list each member's name and roll number, plus Section BDS5A and Instructor Esha Tur Razia Babar:
+  - Kashish Fatima, 24L-2605
+  - Khadija Faiz, 24L-2554
+  - Aliyah Rasheed, 24L-2544
+
+  The details are stored once in `build/doc_common.py` (`TEAM`, `SECTION`, `INSTRUCTOR`).
+- **Notes:**
+  - The task brief gave "24L-2544" for both Khadija and Aliya. Kashish's own message gave distinct numbers, and those were used. Tests now fail on duplicate or malformed roll numbers.
+  - Spellings follow Kashish's message: "Aliyah Rasheed" (the brief had "Aliya Rashid"). "Khadija Faiz" keeps the established spelling "Khadija" (the message typed "kadija"). Members should confirm spellings.
+  - Role leads (M1/M3) are not yet assigned, so the covers list members without roles.
+
+### DEC-027: `is_late` and `delivery_delay_days` are defined only when `is_delivered = 1`
+- **Status:** Accepted
+- **Context:** 6 orders not in status `delivered` still have a delivery timestamp. The previous wording, "NULL if not delivered", was ambiguous for these orders.
+- **Decision:** Both measures are NULL whenever `is_delivered = 0`. The data dictionary rule was updated and the artifacts rebuilt.
+
+### DEC-028: Generated PDFs, PNGs and XLSX files are marked `binary` in `.gitattributes`
+- **Status:** Accepted
+- **Context:** `* text=auto` made git treat the ASCII-only `P1_06_Star_Schema.pdf` as text ("LF will be replaced by CRLF"). A Windows checkout would then rewrite its line endings, which breaks the PDF's xref byte offsets. A CRLF copy was tested and pymupdf reported it as repaired.
+- **Decision:** Add `*.pdf binary`, `*.png binary` and `*.xlsx binary`. `tests/test_deliverables.py` now fails if any committed PDF needs repair when opened.
