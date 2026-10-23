@@ -112,7 +112,7 @@ Table fact_orders [note: "One row per customer order (order_id), updated as the 
   days_promised NUMERIC(7,2) [not null, note: "Promised lead time: purchase to estimated delivery."]
   delivery_delay_days INTEGER [note: "Delivered date minus estimated date in whole days (negative = early)."]
   is_delivered SMALLINT [not null, note: "1 if status = delivered and a delivery date exists, else 0."]
-  is_late SMALLINT [note: "1 if delivered after the estimated date, 0 if on time; NULL if not delivered."]
+  is_late SMALLINT [note: "1 if delivered after the estimated date, 0 if on time; NULL when is_delivered = 0."]
   customer_order_number SMALLINT [not null, note: "Sequence of this order among the customer's orders (1 = first purchase)."]
   is_repeat_purchase SMALLINT [not null, note: "1 if customer_order_number > 1."]
   review_count SMALLINT [not null, note: "Number of reviews received for the order."]

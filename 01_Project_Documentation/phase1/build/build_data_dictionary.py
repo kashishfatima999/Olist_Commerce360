@@ -1,4 +1,8 @@
 """Build P1_07_Data_Dictionary.xlsx from model_spec.py."""
+import datetime
+import os
+import re
+import zipfile
 from pathlib import Path
 
 from openpyxl import Workbook
@@ -6,8 +10,10 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 
 import model_spec as m
+from doc_common import INSTRUCTOR, SECTION, TEAM
 
-OUT = Path(__file__).resolve().parents[1] / "P1_07_Data_Dictionary.xlsx"
+OUT = Path(os.environ.get("PHASE1_OUTDIR", Path(__file__).resolve().parents[1])) / "P1_07_Data_Dictionary.xlsx"
+FIXED_TIME = datetime.datetime(2026, 10, 25, 0, 0, 0)  # reproducible workbook metadata
 
 HEAD_FILL = PatternFill("solid", fgColor="1F3864")
 HEAD_FONT = Font(bold=True, color="FFFFFF")
@@ -69,6 +75,18 @@ def fill_for(table):
     return FACT_FILL if m.TABLE[table]["kind"] == "fact" else DIM_FILL
 
 
+def normalise_zip(path):
+    """Rewrite the xlsx with fixed entry timestamps so rebuilds are byte-identical."""
+    with zipfile.ZipFile(path) as z:
+        entries = [(i.filename, z.read(i.filename)) for i in z.infolist()]
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
+        for name, data in entries:
+            if name == "docProps/core.xml":  # openpyxl stamps 'modified' with the current time on save
+                data = re.sub(rb"(<dcterms:modified[^>]*>)[^<]*", rb"\g<1>2026-10-25T00:00:00Z", data)
+            z.writestr(zipfile.ZipInfo(name, date_time=FIXED_TIME.timetuple()[:6]), data,
+                       compress_type=zipfile.ZIP_DEFLATED)
+
+
 def main():
     wb = Workbook()
     ws = wb.active
@@ -82,7 +100,8 @@ def main():
         ("Source", "Kaggle 'Brazilian E-Commerce Public Dataset by Olist' (olistbr/brazilian-ecommerce, version 2), 9 CSV files."),
         ("Status", "Design (Phase 1). Tables are not yet implemented; row counts are expected values from source profiling."),
         ("Version / date", "1.0 - 2026-10-25"),
-        ("Prepared by", "[Team member names - Student IDs]"),
+        ("Prepared by", "; ".join(f"{n} ({r})" for n, r in TEAM)),
+        ("Section / instructor", f"{SECTION} / {INSTRUCTOR}"),
         ("", ""),
         ("Key role legend", ""),
         ("PK", "Primary key of the warehouse table"),
@@ -181,7 +200,11 @@ def main():
     for r in wb["Source_Profile"].iter_rows(min_row=2, min_col=2, max_col=2):
         r[0].number_format = "#,##0"
 
+    wb.properties.creator = "Olist Commerce360 team"
+    wb.properties.created = FIXED_TIME
+    wb.properties.modified = FIXED_TIME
     wb.save(OUT)
+    normalise_zip(OUT)
     print("wrote", OUT)
 
 

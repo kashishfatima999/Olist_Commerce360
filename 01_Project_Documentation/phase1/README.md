@@ -10,7 +10,7 @@ Source of requirements: `docs/project_deliverables/DWBI Lab Phase 1.pdf`.
 | Schema Design | 10 |
 | **Total** | **30** |
 
-All files are generated from `build/model_spec.py` (see `build/README.md`). Automated validation is in `build/validation_report.md`: 252 checks, 0 failures, as of 2026-10-24.
+All files are generated from `build/model_spec.py` and `build/doc_common.py` (see `build/README.md`). Automated validation is in `build/validation_report.md`: 269 checks, 0 failures, as of 2026-10-24. The unit, structure and rebuild-consistency tests in `tests/` run in GitHub Actions (`.github/workflows/phase1-ci.yml`) on every push and pull request.
 
 ## 1. Deliverables
 
@@ -44,7 +44,8 @@ All files are generated from `build/model_spec.py` (see `build/README.md`). Auto
 | No unsupported claims (profit, inventory, promotions, results) | P1_01 §4, P1_03 §5 | Validator: forbidden-phrase scan; manual review | — |
 
 ## 3. Before submission (manual)
-- [ ] Replace the cover placeholders (names, student IDs, section, instructor) in `build/doc_common.py` → `TEAM_ROWS`, then rebuild.
+- [x] Cover details filled in from Kashish's message of 2026-10-24: Kashish Fatima 24L-2605, Khadija Faiz 24L-2554, Aliyah Rasheed 24L-2544; Section BDS5A; Instructor Esha Tur Razia Babar (DEC-026).
+- [ ] Each member checks the spelling of their own name and roll number on a cover page.
 - [ ] Each member completes the focused review in `00_Project_Management/work_division/task_board.md`.
 - [ ] Confirm the dataset licence wording on the Kaggle page (A-13).
 - [ ] Confirm with the instructor whether a single combined PDF is preferred (DEC-024).

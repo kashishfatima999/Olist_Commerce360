@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Generated deliverables must never have line endings converted (PDF xref offsets would break)
+*.pdf binary
+*.png binary
+*.xlsx binary
