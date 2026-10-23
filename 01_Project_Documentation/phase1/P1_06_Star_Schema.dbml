@@ -1,0 +1,170 @@
+// Olist Commerce360 - generated from model_spec.py (paste into dbdiagram.io)
+
+Table dim_date [note: "One row per calendar day from 2016-01-01 to 2018-12-31, plus one 'Unknown / not occurred' row (date_key = -1)."] {
+  date_key INTEGER [pk, not null, note: "Surrogate key in YYYYMMDD form; -1 = unknown / not yet occurred."]
+  full_date DATE [unique, note: "Calendar date (NULL only on the unknown row)."]
+  day_of_month SMALLINT [note: "Day number within month (1-31)."]
+  day_of_week_num SMALLINT [note: "ISO day of week (1 = Monday ... 7 = Sunday)."]
+  day_of_week_name VARCHAR(10) [note: "Day name."]
+  is_weekend BOOLEAN [note: "TRUE for Saturday and Sunday."]
+  week_of_year SMALLINT [note: "ISO week number."]
+  month_num SMALLINT [note: "Month number (1-12)."]
+  month_name VARCHAR(10) [note: "Month name."]
+  year_month CHAR(7) [note: "Year and month label used for monthly trends."]
+  quarter_num SMALLINT [note: "Quarter number (1-4)."]
+  year_quarter CHAR(7) [note: "Year and quarter label."]
+  year SMALLINT [note: "Calendar year."]
+}
+
+Table dim_customer [note: "One row per real customer (customer_unique_id), plus one 'Unknown' row (customer_key = -1)."] {
+  customer_key INTEGER [pk, not null, note: "Warehouse surrogate key (identity); -1 = unknown."]
+  customer_unique_id VARCHAR(32) [unique, not null, note: "Olist identifier of the person. Business key; unique in this table."]
+  customer_zip_code_prefix CHAR(5) [note: "First five digits of the customer's postcode."]
+  customer_city VARCHAR(100) [note: "Customer city."]
+  customer_state CHAR(2) [note: "Brazilian state code (UF)."]
+  customer_state_name VARCHAR(30) [note: "Full state name."]
+  customer_region VARCHAR(15) [note: "IBGE macro-region (North, Northeast, Central-West, Southeast, South)."]
+  customer_latitude NUMERIC(9,6) [note: "Approximate latitude of the zip prefix."]
+  customer_longitude NUMERIC(9,6) [note: "Approximate longitude of the zip prefix."]
+  first_purchase_date DATE [note: "Date of the customer's first order in the dataset."]
+}
+
+Table dim_product [note: "One row per product (product_id), plus one 'Unknown' row (product_key = -1)."] {
+  product_key INTEGER [pk, not null, note: "Warehouse surrogate key (identity); -1 = unknown."]
+  product_id VARCHAR(32) [unique, not null, note: "Olist product identifier. Business key."]
+  product_category_name_pt VARCHAR(60) [not null, note: "Category name in Portuguese."]
+  product_category_name_en VARCHAR(60) [not null, note: "Category name in English (used in reports)."]
+  product_name_length SMALLINT [note: "Number of characters in the product name."]
+  product_description_length INTEGER [note: "Number of characters in the product description."]
+  product_photos_qty SMALLINT [note: "Number of published product photos."]
+  product_weight_g INTEGER [note: "Product weight in grams."]
+  product_length_cm SMALLINT [note: "Package length in cm."]
+  product_height_cm SMALLINT [note: "Package height in cm."]
+  product_width_cm SMALLINT [note: "Package width in cm."]
+  product_volume_cm3 INTEGER [note: "Package volume."]
+  weight_band VARCHAR(20) [not null, note: "Weight class for freight analysis."]
+}
+
+Table dim_seller [note: "One row per seller (seller_id), plus one 'Unknown' row (seller_key = -1)."] {
+  seller_key INTEGER [pk, not null, note: "Warehouse surrogate key (identity); -1 = unknown."]
+  seller_id VARCHAR(32) [unique, not null, note: "Olist seller identifier. Business key."]
+  seller_zip_code_prefix CHAR(5) [note: "First five digits of the seller's postcode."]
+  seller_city VARCHAR(100) [note: "Seller city."]
+  seller_state CHAR(2) [note: "Brazilian state code (UF)."]
+  seller_state_name VARCHAR(30) [note: "Full state name."]
+  seller_region VARCHAR(15) [note: "IBGE macro-region."]
+  seller_latitude NUMERIC(9,6) [note: "Approximate latitude of the zip prefix."]
+  seller_longitude NUMERIC(9,6) [note: "Approximate longitude of the zip prefix."]
+}
+
+Table dim_payment_type [note: "One row per payment method code, plus one 'Unknown' row (payment_type_key = -1)."] {
+  payment_type_key SMALLINT [pk, not null, note: "Surrogate key; -1 = unknown."]
+  payment_type_code VARCHAR(20) [unique, not null, note: "Source payment method code."]
+  payment_type_name VARCHAR(30) [not null, note: "Readable payment method name."]
+  payment_method_group VARCHAR(15) [not null, note: "Grouping: Card, Bank slip, Voucher, Unknown."]
+}
+
+Table dim_order_status [note: "One row per order status code, plus one 'Unknown' row (order_status_key = -1)."] {
+  order_status_key SMALLINT [pk, not null, note: "Surrogate key; -1 = unknown."]
+  order_status_code VARCHAR(20) [unique, not null, note: "Source order status."]
+  order_status_name VARCHAR(20) [not null, note: "Readable status name."]
+  status_group VARCHAR(15) [not null, note: "Delivered / In progress / Cancelled (canceled + unavailable)."]
+  is_final_status BOOLEAN [not null, note: "TRUE when the order can no longer change (delivered, canceled, unavailable)."]
+}
+
+Table fact_order_items [note: "One row per product line within a customer order (order_id + order_item_id). Each row is one unit of one product sold by one seller."] {
+  order_id VARCHAR(32) [not null, note: "Order identifier (degenerate dimension). Part of PK."]
+  order_item_id SMALLINT [not null, note: "Line sequence within the order (1..21). Part of PK."]
+  order_purchase_date_key INTEGER [not null, note: "Date the order was placed."]
+  shipping_limit_date_key INTEGER [not null, note: "Seller's deadline to hand the item to the carrier."]
+  customer_key INTEGER [not null, note: "Customer who placed the order."]
+  product_key INTEGER [not null, note: "Product sold."]
+  seller_key INTEGER [not null, note: "Seller who sold the item."]
+  order_status_key SMALLINT [not null, note: "Current status of the parent order (used to exclude cancelled sales)."]
+  item_price NUMERIC(10,2) [not null, note: "Selling price of the item (BRL), excluding freight."]
+  freight_value NUMERIC(10,2) [not null, note: "Freight charged for this item (BRL)."]
+  item_gross_value NUMERIC(10,2) [not null, note: "item_price + freight_value."]
+  item_quantity SMALLINT [not null, note: "Units on this row (always 1 in source; repeated rows mean quantity > 1)."]
+  indexes {
+    (order_id, order_item_id) [pk]
+  }
+}
+
+Table fact_orders [note: "One row per customer order (order_id), updated as the order passes purchase, approval, carrier hand-off and delivery milestones."] {
+  order_id VARCHAR(32) [pk, not null, note: "Order identifier (degenerate dimension)."]
+  customer_key INTEGER [not null, note: "Customer who placed the order."]
+  order_status_key SMALLINT [not null, note: "Current order status."]
+  order_purchase_date_key INTEGER [not null, note: "Order placed (role: purchase date)."]
+  approved_date_key INTEGER [not null, note: "Payment approved (role: approval date); -1 if not yet."]
+  carrier_date_key INTEGER [not null, note: "Handed to carrier (role: carrier date); -1 if not yet."]
+  delivered_date_key INTEGER [not null, note: "Delivered to customer (role: delivery date); -1 if not yet."]
+  estimated_delivery_date_key INTEGER [not null, note: "Delivery date promised at purchase (role: estimated date)."]
+  purchase_hour SMALLINT [not null, note: "Hour of day the order was placed (0-23)."]
+  item_count SMALLINT [not null, note: "Number of item rows in the order (0 for orders without items)."]
+  order_item_value NUMERIC(12,2) [not null, note: "Sum of item_price for the order."]
+  order_freight_value NUMERIC(12,2) [not null, note: "Sum of freight_value for the order."]
+  order_payment_value NUMERIC(12,2) [note: "Total amount paid for the order (all payment records)."]
+  payment_count SMALLINT [not null, note: "Number of payment records for the order."]
+  days_purchase_to_approval NUMERIC(7,2) [note: "Elapsed days from purchase to payment approval."]
+  days_approval_to_carrier NUMERIC(7,2) [note: "Elapsed days from approval to carrier hand-off (seller handling)."]
+  days_carrier_to_customer NUMERIC(7,2) [note: "Elapsed days in transit."]
+  days_purchase_to_delivery NUMERIC(7,2) [note: "Total elapsed days from purchase to delivery."]
+  days_promised NUMERIC(7,2) [not null, note: "Promised lead time: purchase to estimated delivery."]
+  delivery_delay_days INTEGER [note: "Delivered date minus estimated date in whole days (negative = early)."]
+  is_delivered SMALLINT [not null, note: "1 if status = delivered and a delivery date exists, else 0."]
+  is_late SMALLINT [note: "1 if delivered after the estimated date, 0 if on time; NULL if not delivered."]
+  customer_order_number SMALLINT [not null, note: "Sequence of this order among the customer's orders (1 = first purchase)."]
+  is_repeat_purchase SMALLINT [not null, note: "1 if customer_order_number > 1."]
+  review_count SMALLINT [not null, note: "Number of reviews received for the order."]
+  avg_review_score NUMERIC(3,2) [note: "Mean review score of the order (1-5); NULL if no review."]
+}
+
+Table fact_payments [note: "One row per payment record of an order (order_id + payment_sequential). An order paid with a card and two vouchers has three rows."] {
+  order_id VARCHAR(32) [not null, note: "Order identifier (degenerate dimension). Part of PK."]
+  payment_sequential SMALLINT [not null, note: "Sequence of the payment within the order (1..29). Part of PK."]
+  order_purchase_date_key INTEGER [not null, note: "Date the order was placed (no separate payment date exists in source)."]
+  customer_key INTEGER [not null, note: "Customer who paid."]
+  payment_type_key SMALLINT [not null, note: "Payment method."]
+  order_status_key SMALLINT [not null, note: "Current status of the parent order."]
+  payment_value NUMERIC(10,2) [not null, note: "Amount paid in this payment record (BRL). Not the same as item sales revenue."]
+  payment_installments SMALLINT [not null, note: "Number of instalments chosen (0 in 2 source rows, treated as 1)."]
+  indexes {
+    (order_id, payment_sequential) [pk]
+  }
+}
+
+Table fact_reviews [note: "One row per review submitted for an order (review_id + order_id). The same review_id can cover more than one order, and an order can receive more than one review."] {
+  review_id VARCHAR(32) [not null, note: "Review identifier (degenerate). Part of PK."]
+  order_id VARCHAR(32) [not null, note: "Reviewed order (degenerate). Part of PK."]
+  customer_key INTEGER [not null, note: "Customer who wrote the review."]
+  review_creation_date_key INTEGER [not null, note: "Date the satisfaction survey was sent (role: review date)."]
+  review_answer_date_key INTEGER [not null, note: "Date the customer answered (role: answer date)."]
+  review_score SMALLINT [not null, note: "Satisfaction score 1 (worst) to 5 (best)."]
+  response_hours NUMERIC(8,2) [not null, note: "Hours between survey creation and customer answer."]
+  has_comment_title SMALLINT [not null, note: "1 if the customer wrote a comment title."]
+  has_comment_message SMALLINT [not null, note: "1 if the customer wrote a comment message."]
+  indexes {
+    (review_id, order_id) [pk]
+  }
+}
+
+Ref: fact_order_items.order_purchase_date_key > dim_date.date_key
+Ref: fact_order_items.shipping_limit_date_key > dim_date.date_key
+Ref: fact_order_items.customer_key > dim_customer.customer_key
+Ref: fact_order_items.product_key > dim_product.product_key
+Ref: fact_order_items.seller_key > dim_seller.seller_key
+Ref: fact_order_items.order_status_key > dim_order_status.order_status_key
+Ref: fact_orders.customer_key > dim_customer.customer_key
+Ref: fact_orders.order_status_key > dim_order_status.order_status_key
+Ref: fact_orders.order_purchase_date_key > dim_date.date_key
+Ref: fact_orders.approved_date_key > dim_date.date_key
+Ref: fact_orders.carrier_date_key > dim_date.date_key
+Ref: fact_orders.delivered_date_key > dim_date.date_key
+Ref: fact_orders.estimated_delivery_date_key > dim_date.date_key
+Ref: fact_payments.order_purchase_date_key > dim_date.date_key
+Ref: fact_payments.customer_key > dim_customer.customer_key
+Ref: fact_payments.payment_type_key > dim_payment_type.payment_type_key
+Ref: fact_payments.order_status_key > dim_order_status.order_status_key
+Ref: fact_reviews.customer_key > dim_customer.customer_key
+Ref: fact_reviews.review_creation_date_key > dim_date.date_key
+Ref: fact_reviews.review_answer_date_key > dim_date.date_key
