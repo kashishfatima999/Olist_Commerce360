@@ -2,12 +2,12 @@
 
 **Roles:**
 - **M1:** Warehouse & integration lead
-- **M2:** Business analysis & modeling lead (suggested: Khadija)
+- **M2:** Business analysis & modeling lead
 - **M3:** Analytics & BI lead
 
 **Team:** Kashish Fatima (24L-2605), Khadija Faiz (24L-2554), Aliyah Rasheed (24L-2544).
 
-Khadija is the proposed M2. The team still needs to assign M1 and M3 between Kashish and Aliyah (Q-01).
+**Role leads (DEC-029):** M1 = Kashish Fatima, M2 = Khadija Faiz, M3 = Aliyah Rasheed.
 
 Status values: Todo, In progress, Review, Done.
 
@@ -43,5 +43,27 @@ All seven deliverables were drafted from one model specification (DEC-015, DEC-0
 
 Record review comments in the daily log. To change the model, edit `build/model_spec.py` and rebuild (see `01_Project_Documentation/phase1/build/README.md`). Do not edit the generated PDFs or the xlsx directly.
 
-## Phase 2 / Phase 3 (planning only, not started)
-See `roles.md`. Do not start before the Phase 1 submission.
+## Phase 2 (due week of 2026-11-03, Q-06)
+
+Plan, contract and checklist: `01_Project_Documentation/phase2/README.md`. Reviews rotate (M1 -> M2 -> M3 -> M1).
+
+| ID | Task | Owner | Reviewer | Est. | Depends on | Deliverable | Status |
+|----|------|-------|----------|------|-----------|-------------|--------|
+| P2-01 | Phase 2 plan, division, hand-off contract | M1 (Claude for Kashish) | All | 1 h | - | `phase2/README.md` | Done 2026-10-27 |
+| P2-02 | Database and schemas SQL | M1 | M3 | 1 h | P2-01 | `04_Data_Warehouse/database.sql`, `schemas.sql` | Done 2026-10-27 |
+| P2-03 | Staging DDL + CSV loader with reconciliation | M1 | M3 | 2 h | P2-02 | `03_ETL/staging/` | Done 2026-10-27 (9/9 files reconciled) |
+| P2-04 | Warehouse DDL generated from model_spec | M1 | M3 | 2 h | P2-02 | `04_Data_Warehouse/warehouse.sql` | Done 2026-10-27 (87/87 structure checks) |
+| P2-05 | Pipeline runner, run log, reports | M1 | M3 | 2 h | P2-03 | `03_ETL/run_pipeline.py` | Done 2026-10-27 |
+| P2-06 | Phase 2 tests and CI (PostgreSQL service) | M1 | M3 | 1.5 h | P2-04 | `tests/test_phase2_*.py`, `.github/workflows/phase2-ci.yml` | Done locally; remote CI pending push |
+| P2-07 | M1 implementation report | M1 | M3 | 0.5 h | P2-05 | `phase2/P2_M1_Database_Implementation_Report.md` | Done 2026-10-27 |
+| P2-08 | Cleaning scripts `stg_*` -> `cln_*` (TR-01 to TR-15) | M2 | M1 | 4 h | P2-03 | `03_ETL/cleaning/` | Todo |
+| P2-09 | Dimension loads with surrogate keys and -1 members | M2 | M1 | 3 h | P2-08 | `03_ETL/dimensions/` | Todo |
+| P2-10 | Data Cleaning Report PDF | M2 | M1 | 2 h | P2-08 | `phase2/P2_02_Data_Cleaning_Report.pdf` | Todo |
+| P2-11 | Fact loads (BK -> SK lookups, per-order aggregates) | M3 | M2 | 4 h | P2-09, contract DEC-033 | `03_ETL/facts/` | Todo |
+| P2-12 | Quality checks (completeness, accuracy, integrity) | M3 | M2 | 3 h | P2-11 | `03_ETL/quality/` | Todo |
+| P2-13 | Data Quality Report PDF | M3 | M2 | 2 h | P2-12 | `phase2/P2_03_Data_Quality_Report.pdf` | Todo |
+| P2-14 | Accept or revise Proposed DEC-031 to DEC-035 | M2, M3 | - | 0.5 h | - | `decision_log.md` | Todo |
+| P2-15 | Final integration run `run_pipeline.py --strict`, then commit, push, PR, green CI | M1 (Kashish) | All | 1 h | P2-08 to P2-13 | PR to `main`, repository link | Todo |
+
+## Phase 3 (planning only, not started)
+See `roles.md`. Do not start before the Phase 2 submission.

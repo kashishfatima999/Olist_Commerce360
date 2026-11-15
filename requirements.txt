@@ -1,6 +1,9 @@
-# Build and test dependencies for the Phase 1 documents (used by CI).
-# Pinned to the versions the committed artifacts were generated with.
+# Build and test dependencies (used by CI). Pinned to the versions the committed artifacts
+# were generated and tested with.
+# Phase 1 documents
 reportlab==5.0.1
 openpyxl==3.1.5
 pymupdf==1.28.2
+# Phase 2 ETL pipeline (PostgreSQL driver)
+psycopg[binary]==3.3.6
 # Local-only: 02_Data/profiling/profile_source.py also needs pandas and the raw Kaggle CSVs.

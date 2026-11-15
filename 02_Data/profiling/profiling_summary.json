@@ -1,5 +1,14 @@
 {
   "customers": {
+    "rows": 99441,
+    "full_row_duplicates": 0,
+    "nulls": {
+      "customer_id": 0,
+      "customer_unique_id": 0,
+      "customer_zip_code_prefix": 0,
+      "customer_city": 0,
+      "customer_state": 0
+    },
     "unique_persons": 96096,
     "repeat_persons": 2997
   },

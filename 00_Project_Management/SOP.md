@@ -57,6 +57,13 @@ Rules:
 - All cleaning is done in scripts (Phase 2), so results can be reproduced.
 - Never put credentials (database passwords, Kaggle tokens) in the repository. Keep them in a local `.env` file, which is also git-ignored.
 
+## 5a. Database work (Phase 2 onwards)
+- All project objects live in database `olist_commerce360`. Never modify other databases on the server.
+- Credentials stay outside the repository (`%APPDATA%\postgresql\pgpass.conf` or `PGPASSWORD`).
+- Change the warehouse schema only through `model_spec.py` and `03_ETL/build_sql.py`, never by editing `warehouse.sql`.
+- Load data only through `03_ETL/run_pipeline.py`, so every run is logged in `project_staging.etl_run_log`.
+- Automated tests use a disposable database whose name ends in `_test` or `_ci`.
+
 ## 6. Deliverable workflow
 1. Draft: author writes the document and the task status becomes `In progress`.
 2. Self-check against the acceptance criteria in `01_Project_Documentation/phase1/README.md`.

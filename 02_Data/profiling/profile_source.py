@@ -246,8 +246,8 @@ md(f"- Persons whose zip prefix differs across orders: {(loc_var['customer_zip_c
    f"state differs: {(loc_var['customer_state'] > 1).sum():,}")
 md(f"- Distinct customer states: {c['customer_state'].nunique()}; distinct cities: {c['customer_city'].nunique():,}")
 md()
-summary["customers"] = {"unique_persons": int(c["customer_unique_id"].nunique()),
-                        "repeat_persons": int((per_person > 1).sum())}
+summary["customers"].update({"unique_persons": int(c["customer_unique_id"].nunique()),
+                        "repeat_persons": int((per_person > 1).sum())})
 
 # ---------------------------------------------------------------- 9. products / sellers
 md("## 9. Products and sellers")
