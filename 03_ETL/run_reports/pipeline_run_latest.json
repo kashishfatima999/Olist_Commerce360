@@ -1,0 +1,769 @@
+{
+  "run_id": "run-20261027T195318",
+  "server": "PostgreSQL 17.10",
+  "python": "3.12.10",
+  "psycopg": "3.3.6",
+  "platform": "Windows-11",
+  "started": "2026-10-27T14:53:18+00:00",
+  "total_seconds": 20.110895699937828,
+  "stages_requested": "create_database,create_schemas,create_etl_metadata,create_staging,load_staging,verify_staging,create_warehouse,verify_warehouse,clean_staging,load_dimensions,load_facts,quality_checks",
+  "stages": [
+    {
+      "run_id": "run-20261027T195318",
+      "order": 1,
+      "stage": "create_database",
+      "owner": "M1",
+      "status": "SUCCESS",
+      "rows": null,
+      "started": "2026-10-27T14:53:18.782847+00:00",
+      "finished": "2026-10-27T14:53:18.908994+00:00",
+      "seconds": 0.1259180000051856,
+      "message": "database olist_commerce360 already exists (kept)"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 2,
+      "stage": "create_schemas",
+      "owner": "M1",
+      "status": "SUCCESS",
+      "rows": null,
+      "started": "2026-10-27T14:53:18.949314+00:00",
+      "finished": "2026-10-27T14:53:18.970725+00:00",
+      "seconds": 0.021719299955293536,
+      "message": "executed 04_Data_Warehouse/schemas.sql"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 3,
+      "stage": "create_etl_metadata",
+      "owner": "M1",
+      "status": "SUCCESS",
+      "rows": null,
+      "started": "2026-10-27T14:53:18.970725+00:00",
+      "finished": "2026-10-27T14:53:18.975406+00:00",
+      "seconds": 0.005464099929668009,
+      "message": "executed 03_ETL/etl_metadata.sql"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 4,
+      "stage": "create_staging",
+      "owner": "M1",
+      "status": "SUCCESS",
+      "rows": null,
+      "started": "2026-10-27T14:53:18.975406+00:00",
+      "finished": "2026-10-27T14:53:19.298629+00:00",
+      "seconds": 0.3222426000284031,
+      "message": "executed 03_ETL/staging/staging.sql"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 5,
+      "stage": "load_staging",
+      "owner": "M1",
+      "status": "SUCCESS",
+      "rows": 1550922,
+      "started": "2026-10-27T14:53:19.298629+00:00",
+      "finished": "2026-10-27T14:53:34.035569+00:00",
+      "seconds": 14.736482999986038,
+      "message": "9 files loaded and reconciled"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 6,
+      "stage": "verify_staging",
+      "owner": "M1",
+      "status": "SUCCESS",
+      "rows": 15,
+      "started": "2026-10-27T14:53:34.035569+00:00",
+      "finished": "2026-10-27T14:53:38.433201+00:00",
+      "seconds": 4.39853010000661,
+      "message": "15 staging data checks passed"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 7,
+      "stage": "create_warehouse",
+      "owner": "M1",
+      "status": "SUCCESS",
+      "rows": null,
+      "started": "2026-10-27T14:53:38.433201+00:00",
+      "finished": "2026-10-27T14:53:38.535552+00:00",
+      "seconds": 0.10325059993192554,
+      "message": "executed 04_Data_Warehouse/warehouse.sql"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 8,
+      "stage": "verify_warehouse",
+      "owner": "M1",
+      "status": "SUCCESS",
+      "rows": 87,
+      "started": "2026-10-27T14:53:38.535552+00:00",
+      "finished": "2026-10-27T14:53:38.733072+00:00",
+      "seconds": 0.19624420010950416,
+      "message": "87 structure checks passed"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 9,
+      "stage": "clean_staging",
+      "owner": "M2",
+      "status": "NOT_IMPLEMENTED",
+      "rows": null,
+      "started": "2026-10-27T14:53:38.733072+00:00",
+      "finished": "2026-10-27T14:53:38.734078+00:00",
+      "seconds": 0.0002327000256627798,
+      "message": "no *.sql / *.py scripts in 03_ETL/cleaning/ yet (owner M2)"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 10,
+      "stage": "load_dimensions",
+      "owner": "M2",
+      "status": "NOT_IMPLEMENTED",
+      "rows": null,
+      "started": "2026-10-27T14:53:38.734078+00:00",
+      "finished": "2026-10-27T14:53:38.734078+00:00",
+      "seconds": 7.579999510198832e-05,
+      "message": "no *.sql / *.py scripts in 03_ETL/dimensions/ yet (owner M2)"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 11,
+      "stage": "load_facts",
+      "owner": "M3",
+      "status": "NOT_IMPLEMENTED",
+      "rows": null,
+      "started": "2026-10-27T14:53:38.734078+00:00",
+      "finished": "2026-10-27T14:53:38.734078+00:00",
+      "seconds": 7.299997378140688e-05,
+      "message": "no *.sql / *.py scripts in 03_ETL/facts/ yet (owner M3)"
+    },
+    {
+      "run_id": "run-20261027T195318",
+      "order": 12,
+      "stage": "quality_checks",
+      "owner": "M3",
+      "status": "NOT_IMPLEMENTED",
+      "rows": null,
+      "started": "2026-10-27T14:53:38.734078+00:00",
+      "finished": "2026-10-27T14:53:38.734078+00:00",
+      "seconds": 6.970006506890059e-05,
+      "message": "no *.sql / *.py scripts in 03_ETL/quality/ yet (owner M3)"
+    }
+  ],
+  "staging_audit": [
+    {
+      "file": "olist_customers_dataset.csv",
+      "table": "stg_customers",
+      "bytes": 9033957,
+      "sha256": "983a422239e1712ded753b3bf9ecf47dc73f144d306029dcfa99e70a226883d2",
+      "header_ok": true,
+      "csv_records": 99441,
+      "loaded_rows": 99441,
+      "expected_rows": 99441,
+      "reconciled": true
+    },
+    {
+      "file": "olist_geolocation_dataset.csv",
+      "table": "stg_geolocation",
+      "bytes": 61273883,
+      "sha256": "b514f6fc991b9566aeba02aa5d67e2c3630f034b60a0e05aa0d082a3b66d88d6",
+      "header_ok": true,
+      "csv_records": 1000163,
+      "loaded_rows": 1000163,
+      "expected_rows": 1000163,
+      "reconciled": true
+    },
+    {
+      "file": "olist_order_items_dataset.csv",
+      "table": "stg_order_items",
+      "bytes": 15438671,
+      "sha256": "0bc4d068c4fe38cbb01bd90e8746e3c613fe7b4baef75fab7b0e329701c3e279",
+      "header_ok": true,
+      "csv_records": 112650,
+      "loaded_rows": 112650,
+      "expected_rows": 112650,
+      "reconciled": true
+    },
+    {
+      "file": "olist_order_payments_dataset.csv",
+      "table": "stg_order_payments",
+      "bytes": 5777138,
+      "sha256": "4f713964f2815dbbaa40b9488268c55aac3627bfce5aa96cf58d1f3616de3cc0",
+      "header_ok": true,
+      "csv_records": 103886,
+      "loaded_rows": 103886,
+      "expected_rows": 103886,
+      "reconciled": true
+    },
+    {
+      "file": "olist_order_reviews_dataset.csv",
+      "table": "stg_order_reviews",
+      "bytes": 14451670,
+      "sha256": "012b61c7593e34f51fa614efdf802b9c7056ce6aae5307ddb93236e7cfc797d7",
+      "header_ok": true,
+      "csv_records": 99224,
+      "loaded_rows": 99224,
+      "expected_rows": 99224,
+      "reconciled": true
+    },
+    {
+      "file": "olist_orders_dataset.csv",
+      "table": "stg_orders",
+      "bytes": 17654914,
+      "sha256": "8df58ef3d2d7e9944010f7beecd9b75367f5588ec6e3c91cec19ae3345ef9ecf",
+      "header_ok": true,
+      "csv_records": 99441,
+      "loaded_rows": 99441,
+      "expected_rows": 99441,
+      "reconciled": true
+    },
+    {
+      "file": "olist_products_dataset.csv",
+      "table": "stg_products",
+      "bytes": 2379446,
+      "sha256": "3e6569628a17fbc75fd206ee357b59e20364b9afa90f5b6cd5b4d624c58aa9cc",
+      "header_ok": true,
+      "csv_records": 32951,
+      "loaded_rows": 32951,
+      "expected_rows": 32951,
+      "reconciled": true
+    },
+    {
+      "file": "olist_sellers_dataset.csv",
+      "table": "stg_sellers",
+      "bytes": 174703,
+      "sha256": "1f643d2b950373b85735e7794b20986f528d7a000432e7c6f9bcbb44d0846a0e",
+      "header_ok": true,
+      "csv_records": 3095,
+      "loaded_rows": 3095,
+      "expected_rows": 3095,
+      "reconciled": true
+    },
+    {
+      "file": "product_category_name_translation.csv",
+      "table": "stg_category_translation",
+      "bytes": 2613,
+      "sha256": "a81f0d1f27b27e7293f761bc79e3ce8f348ee39c4b3ed3e49bde38f478586278",
+      "header_ok": true,
+      "csv_records": 71,
+      "loaded_rows": 71,
+      "expected_rows": 71,
+      "reconciled": true
+    }
+  ],
+  "verification": [
+    {
+      "check": "staging data: orders: NULL order_approved_at",
+      "passed": true,
+      "detail": "got 160, expected 160"
+    },
+    {
+      "check": "staging data: orders: NULL order_delivered_carrier_date",
+      "passed": true,
+      "detail": "got 1783, expected 1783"
+    },
+    {
+      "check": "staging data: orders: NULL order_delivered_customer_date",
+      "passed": true,
+      "detail": "got 2965, expected 2965"
+    },
+    {
+      "check": "staging data: orders: delivered status",
+      "passed": true,
+      "detail": "got 96478, expected 96478"
+    },
+    {
+      "check": "staging data: customers: distinct customer_unique_id",
+      "passed": true,
+      "detail": "got 96096, expected 96096"
+    },
+    {
+      "check": "staging data: customers: zip prefixes keep leading zero (5 chars)",
+      "passed": true,
+      "detail": "got 0, expected 0"
+    },
+    {
+      "check": "staging data: customers: zip prefixes starting with 0",
+      "passed": true,
+      "detail": "got 23995, expected 23995"
+    },
+    {
+      "check": "staging data: products: NULL category",
+      "passed": true,
+      "detail": "got 610, expected 610"
+    },
+    {
+      "check": "staging data: order_items: SUM(price)",
+      "passed": true,
+      "detail": "got 13591643.70, expected 13591643.70"
+    },
+    {
+      "check": "staging data: order_items: SUM(freight_value)",
+      "passed": true,
+      "detail": "got 2251909.54, expected 2251909.54"
+    },
+    {
+      "check": "staging data: payments: SUM(payment_value)",
+      "passed": true,
+      "detail": "got 16008872.12, expected 16008872.12"
+    },
+    {
+      "check": "staging data: reviews: distinct (review_id, order_id)",
+      "passed": true,
+      "detail": "got 99224, expected 99224"
+    },
+    {
+      "check": "staging data: reviews: comment messages present",
+      "passed": true,
+      "detail": "got 40977, expected 40977"
+    },
+    {
+      "check": "staging data: geolocation: distinct zip prefixes",
+      "passed": true,
+      "detail": "got 19015, expected 19015"
+    },
+    {
+      "check": "staging data: translation: BOM not in data",
+      "passed": true,
+      "detail": "got 0, expected 0"
+    },
+    {
+      "check": "schema project_staging exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "schema project_dw exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "schema project_reporting exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_customers: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_customers: columns match source header",
+      "passed": true,
+      "detail": "5 source columns"
+    },
+    {
+      "check": "staging stg_customers: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_geolocation: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_geolocation: columns match source header",
+      "passed": true,
+      "detail": "5 source columns"
+    },
+    {
+      "check": "staging stg_geolocation: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_order_items: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_order_items: columns match source header",
+      "passed": true,
+      "detail": "7 source columns"
+    },
+    {
+      "check": "staging stg_order_items: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_order_payments: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_order_payments: columns match source header",
+      "passed": true,
+      "detail": "5 source columns"
+    },
+    {
+      "check": "staging stg_order_payments: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_order_reviews: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_order_reviews: columns match source header",
+      "passed": true,
+      "detail": "7 source columns"
+    },
+    {
+      "check": "staging stg_order_reviews: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_orders: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_orders: columns match source header",
+      "passed": true,
+      "detail": "8 source columns"
+    },
+    {
+      "check": "staging stg_orders: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_products: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_products: columns match source header",
+      "passed": true,
+      "detail": "9 source columns"
+    },
+    {
+      "check": "staging stg_products: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_sellers: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_sellers: columns match source header",
+      "passed": true,
+      "detail": "4 source columns"
+    },
+    {
+      "check": "staging stg_sellers: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_category_translation: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "staging stg_category_translation: columns match source header",
+      "passed": true,
+      "detail": "2 source columns"
+    },
+    {
+      "check": "staging stg_category_translation: source columns are TEXT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata etl_run_log: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata etl_load_audit: exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "project_dw contains exactly the 10 designed tables",
+      "passed": true,
+      "detail": "extra=[] missing=[]"
+    },
+    {
+      "check": "dim_date: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_date: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_date: primary key ['date_key']",
+      "passed": true,
+      "detail": "[['date_key']]"
+    },
+    {
+      "check": "dim_date: smart key (no identity)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_date: natural key ['full_date'] is UNIQUE",
+      "passed": true,
+      "detail": "[['full_date']]"
+    },
+    {
+      "check": "dim_date: foreign keys match design (0)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_customer: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_customer: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_customer: primary key ['customer_key']",
+      "passed": true,
+      "detail": "[['customer_key']]"
+    },
+    {
+      "check": "dim_customer: surrogate key customer_key is GENERATED ALWAYS AS IDENTITY",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_customer: natural key ['customer_unique_id'] is UNIQUE",
+      "passed": true,
+      "detail": "[['customer_unique_id']]"
+    },
+    {
+      "check": "dim_customer: foreign keys match design (0)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_product: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_product: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_product: primary key ['product_key']",
+      "passed": true,
+      "detail": "[['product_key']]"
+    },
+    {
+      "check": "dim_product: surrogate key product_key is GENERATED ALWAYS AS IDENTITY",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_product: natural key ['product_id'] is UNIQUE",
+      "passed": true,
+      "detail": "[['product_id']]"
+    },
+    {
+      "check": "dim_product: foreign keys match design (0)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_seller: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_seller: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_seller: primary key ['seller_key']",
+      "passed": true,
+      "detail": "[['seller_key']]"
+    },
+    {
+      "check": "dim_seller: surrogate key seller_key is GENERATED ALWAYS AS IDENTITY",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_seller: natural key ['seller_id'] is UNIQUE",
+      "passed": true,
+      "detail": "[['seller_id']]"
+    },
+    {
+      "check": "dim_seller: foreign keys match design (0)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_payment_type: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_payment_type: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_payment_type: primary key ['payment_type_key']",
+      "passed": true,
+      "detail": "[['payment_type_key']]"
+    },
+    {
+      "check": "dim_payment_type: surrogate key payment_type_key is GENERATED ALWAYS AS IDENTITY",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_payment_type: natural key ['payment_type_code'] is UNIQUE",
+      "passed": true,
+      "detail": "[['payment_type_code']]"
+    },
+    {
+      "check": "dim_payment_type: foreign keys match design (0)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_order_status: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_order_status: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_order_status: primary key ['order_status_key']",
+      "passed": true,
+      "detail": "[['order_status_key']]"
+    },
+    {
+      "check": "dim_order_status: surrogate key order_status_key is GENERATED ALWAYS AS IDENTITY",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dim_order_status: natural key ['order_status_code'] is UNIQUE",
+      "passed": true,
+      "detail": "[['order_status_code']]"
+    },
+    {
+      "check": "dim_order_status: foreign keys match design (0)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_order_items: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_order_items: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_order_items: primary key ['order_id', 'order_item_id']",
+      "passed": true,
+      "detail": "[['order_id', 'order_item_id']]"
+    },
+    {
+      "check": "fact_order_items: foreign keys match design (6)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_orders: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_orders: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_orders: primary key ['order_id']",
+      "passed": true,
+      "detail": "[['order_id']]"
+    },
+    {
+      "check": "fact_orders: foreign keys match design (7)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_payments: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_payments: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_payments: primary key ['order_id', 'payment_sequential']",
+      "passed": true,
+      "detail": "[['order_id', 'payment_sequential']]"
+    },
+    {
+      "check": "fact_payments: foreign keys match design (4)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_reviews: columns, order, types, nullability match data dictionary",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_reviews: every column has a comment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "fact_reviews: primary key ['review_id', 'order_id']",
+      "passed": true,
+      "detail": "[['review_id', 'order_id']]"
+    },
+    {
+      "check": "fact_reviews: foreign keys match design (3)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "project_dw: CHECK constraints present",
+      "passed": true,
+      "detail": "32 CHECK constraints"
+    },
+    {
+      "check": "project_dw: no secondary indexes yet (Phase 3 before/after baseline)",
+      "passed": true,
+      "detail": "0"
+    }
+  ]
+}

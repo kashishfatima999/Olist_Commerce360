@@ -4,7 +4,7 @@
 |--------|----------|---------|
 | `raw_data/` | Original Kaggle CSVs, never edited | No (git-ignored) |
 | `profiling/` | Read-only profiling outputs (Phase 1) | Yes |
-| `cleaned_data/` | Outputs of the cleaning scripts (Phase 2) | Decide in Phase 2 based on size |
+| `cleaned_data/` | Not used: the pipeline keeps cleaned data inside PostgreSQL (`project_staging.cln_*`, owner M2; see `01_Project_Documentation/phase2/README.md` §3) | n/a |
 
 ## Source
 **Brazilian E-Commerce Public Dataset by Olist**: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce

@@ -209,3 +209,68 @@ DEC-005 to DEC-014 were proposed on 2026-10-24 before the dataset was available.
 - **Status:** Accepted
 - **Context:** `* text=auto` made git treat the ASCII-only `P1_06_Star_Schema.pdf` as text ("LF will be replaced by CRLF"). A Windows checkout would then rewrite its line endings, which breaks the PDF's xref byte offsets. A CRLF copy was tested and pymupdf reported it as repaired.
 - **Decision:** Add `*.pdf binary`, `*.png binary` and `*.xlsx binary`. `tests/test_deliverables.py` now fails if any committed PDF needs repair when opened.
+
+---
+
+## Phase 2 (2026-10-27): planning and Member 1 implementation
+
+### DEC-029: Phase 2 split into three equal workstreams; roles confirmed
+- **Date:** 2026-10-27 | **Proposed by:** Claude (for Kashish) | **Status:** Accepted (Kashish, 2026-10-27: "yes they agree")
+- **Context:** The earlier `roles.md` gave M1 most of Phase 2: PostgreSQL, staging, dimension and fact loads, surrogate keys and integrity.
+- **Decision:** Each member owns roughly one third of the work and of the official deliverables (`01_Project_Documentation/phase2/README.md` §2). Reviews rotate: M1 reviews M2, M2 reviews M3, M3 reviews M1.
+
+  | Member | Role | Workstream |
+  |---|---|---|
+  | Kashish Fatima | M1 | Database, staging, warehouse DDL, pipeline |
+  | Khadija Faiz | M2 | Cleaning, dimensions and surrogate keys, Data Cleaning Report |
+  | Aliyah Rasheed | M3 | Facts, quality checks, Data Quality Report |
+
+- This resolves Q-01.
+
+### DEC-030: Database `olist_commerce360` on local PostgreSQL 17, `postgres` login through pgpass.conf
+- **Status:** Accepted (Kashish, 2026-10-27)
+- **Decision:**
+  - The project uses a dedicated database. The 7 existing databases on the server are not touched.
+  - The password lives only in `%APPDATA%\postgresql\pgpass.conf`, outside the repository, and libpq reads it.
+  - Scripts read `PGHOST`, `PGPORT`, `PGUSER` and `OLIST_DB` from the environment.
+
+### DEC-031: Staging stores every source column as TEXT (lossless landing)
+- **Status:** Proposed (review: M2)
+- **Context:** Typed staging would reject or silently convert values. For example, zip `01037` read as an integer loses its leading zero (TR-02).
+- **Decision:** `stg_*` tables mirror the CSV headers exactly, with all columns TEXT plus `stg_row_id` for lineage. Typing and cleaning happen in M2's `cln_*` layer. Load is by `COPY ... FORMAT csv`, so an empty unquoted field becomes NULL.
+- **Evidence:** 15 staging data checks against independent Phase 1 profiling figures all passed (NULL counts, sums, zip leading zeros).
+
+### DEC-032: Warehouse DDL is generated from the Phase 1 `model_spec.py`
+- **Status:** Proposed (review: M3)
+- **Decision:** `03_ETL/build_sql.py` writes `04_Data_Warehouse/warehouse.sql` and `03_ETL/staging/staging.sql`. CI runs `--check`. A schema change therefore goes through `model_spec.py`, and the P1_06 diagram and P1_07 dictionary are rebuilt with it.
+- **Rationale:** This guarantees that the physical schema equals the documented design. 87 catalog checks confirm it on the live database.
+
+### DEC-033: Hand-off contract `cln_*` between M2 and M3
+- **Status:** Proposed (M2 and M3 must agree)
+- **Decision:** The cleaned tables and columns are as listed in `phase2/README.md` §3. M3 can write fact loads against them before M2 finishes. Changes require a DEC entry agreed by both.
+
+### DEC-034: Constraint and index policy in `project_dw`
+- **Status:** Proposed (review: M3)
+- **Decision:**
+  - Real PRIMARY KEY, UNIQUE (natural keys) and all 20 FOREIGN KEY constraints are declared.
+  - 32 CHECK constraints come from the business rules (DEC-012, DEC-016, DEC-021, DEC-027, TR rules).
+  - Surrogate keys are `GENERATED ALWAYS AS IDENTITY`, with the -1 member inserted by `OVERRIDING SYSTEM VALUE`. `dim_date` uses the YYYYMMDD smart key.
+  - **No secondary indexes until Phase 3**, so the EXPLAIN ANALYZE before/after comparison has a genuine baseline. Verification checks this.
+
+### DEC-035: Rebuild semantics
+- **Status:** Proposed (review: M3)
+- **Decision:**
+  - The database is created only if it is missing. Schemas use `IF NOT EXISTS`.
+  - Staging and warehouse tables are dropped and recreated on every full run, with no `CASCADE`, so a Phase 3 view blocks the rebuild loudly instead of being dropped silently.
+  - The metadata tables (`etl_run_log`, `etl_load_audit`) keep their history.
+  - Stages 9 to 12 run the scripts found in each owner's folder. An empty folder is reported as `NOT_IMPLEMENTED`, never as success. `--strict` fails on it.
+
+### DEC-036: Pipeline transactions and verification connection
+- **Status:** Accepted (defect fix, evidence below)
+- **Context:** The first runs reported success, but `project_dw` was empty after the run. The DDL had run inside an implicit transaction that was never committed, and verification read the uncommitted objects through the same connection.
+- **Decision:** The pipeline connection is autocommit, and each SQL file runs in an explicit `conn.transaction()`. Verification opens a fresh connection, so it can only pass on committed objects. This is guarded by `tests/test_phase2_db.py::test_2_objects_committed`.
+
+### DEC-037: Fix the Phase 1 profiling summary bug
+- **Status:** Accepted (defect fix)
+- **Context:** `profile_source.py` overwrote `summary["customers"]`, so `profiling_summary.json` had no customers row count. Phase 2 tests compare the source contract with that file.
+- **Decision:** Use `update()` instead of assignment and re-run profiling. `profiling_report.md` was byte-identical before and after; the JSON gained the missing `rows`, `full_row_duplicates` and `nulls` keys for customers.

@@ -38,7 +38,7 @@ All files are generated from `build/model_spec.py` and `build/doc_common.py` (se
 | Star or snowflake schema with justification | P1_04 §11, P1_06 | Manual review | — |
 | Conceptual model | P1_06 page 2, P1_04 Figure 1 | Visual check | — |
 | Logical model | P1_04 §10 | Validator: all tables present | — |
-| Physical model (PK, FK, attributes, measures, grain) | P1_06 page 1, P1_07 | Validator: every dictionary column appears in the diagram | Physical DDL is Phase 2 work |
+| Physical model (PK, FK, attributes, measures, grain) | P1_06 page 1, P1_07 | Validator: every dictionary column appears in the diagram | Implemented in Phase 2 as `04_Data_Warehouse/warehouse.sql`, generated from `model_spec.py` and verified on PostgreSQL 17 (87/87 structure checks, 2026-10-27) |
 | Data Dictionary Excel | P1_07 | Validator: required sheets present; columns, types and roles identical to the model | — |
 | Documents consistent with each other | All | Validator: table names, grains, relationships and DBML refs | — |
 | No unsupported claims (profit, inventory, promotions, results) | P1_01 §4, P1_03 §5 | Validator: forbidden-phrase scan; manual review | — |

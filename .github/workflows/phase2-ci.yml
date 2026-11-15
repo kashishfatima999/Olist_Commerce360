@@ -1,0 +1,61 @@
+name: Phase 2 CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase2-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  database:
+    name: Build and verify the warehouse schema on PostgreSQL 17
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          # throwaway CI container only - no password is stored anywhere
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: postgres
+      OLIST_TEST_DB: "1"
+      OLIST_TEST_DB_NAME: olist_commerce360_ci
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Generated SQL is up to date with model_spec and the source contract
+        run: python 03_ETL/build_sql.py --check
+
+      - name: Build database, schemas, staging and warehouse; verify against the design
+        # the raw CSVs are not in Git, so CI builds and verifies structure only (load stages run locally)
+        run: >-
+          python 03_ETL/run_pipeline.py --no-report
+          --stages create_database,create_schemas,create_etl_metadata,create_staging,create_warehouse,verify_warehouse
+
+      - name: Phase 2 static and database integration tests
+        run: python -m unittest discover -s tests -p "test_phase2*.py" -v
