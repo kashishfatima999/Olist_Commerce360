@@ -1,0 +1,19 @@
+-- Run manually after M2 stages; not a .sql file so the runner does not execute it.
+SELECT 'customers' table_name, (SELECT count(*) FROM project_staging.stg_customers) raw_rows,(SELECT count(*) FROM project_staging.cln_customers) cleaned_rows
+UNION ALL SELECT 'orders',(SELECT count(*) FROM project_staging.stg_orders),(SELECT count(*) FROM project_staging.cln_orders)
+UNION ALL SELECT 'order_items',(SELECT count(*) FROM project_staging.stg_order_items),(SELECT count(*) FROM project_staging.cln_order_items)
+UNION ALL SELECT 'payments',(SELECT count(*) FROM project_staging.stg_order_payments),(SELECT count(*) FROM project_staging.cln_payments)
+UNION ALL SELECT 'reviews',(SELECT count(*) FROM project_staging.stg_order_reviews),(SELECT count(*) FROM project_staging.cln_reviews)
+UNION ALL SELECT 'products',(SELECT count(*) FROM project_staging.stg_products),(SELECT count(*) FROM project_staging.cln_products)
+UNION ALL SELECT 'sellers',(SELECT count(*) FROM project_staging.stg_sellers),(SELECT count(*) FROM project_staging.cln_sellers)
+UNION ALL SELECT 'geolocation',(SELECT count(*) FROM project_staging.stg_geolocation),(SELECT count(*) FROM project_staging.cln_zip_geo);
+SELECT 'dim_date' table_name,count(*) FROM project_dw.dim_date
+UNION ALL SELECT 'dim_customer',count(*) FROM project_dw.dim_customer
+UNION ALL SELECT 'dim_product',count(*) FROM project_dw.dim_product
+UNION ALL SELECT 'dim_seller',count(*) FROM project_dw.dim_seller
+UNION ALL SELECT 'dim_payment_type',count(*) FROM project_dw.dim_payment_type
+UNION ALL SELECT 'dim_order_status',count(*) FROM project_dw.dim_order_status;
+SELECT (SELECT sum(project_staging.m2_num(price)) FROM project_staging.stg_order_items) raw_price,
+(SELECT sum(price) FROM project_staging.cln_order_items) cleaned_price,
+(SELECT sum(project_staging.m2_num(payment_value)) FROM project_staging.stg_order_payments) raw_payment,
+(SELECT sum(payment_value) FROM project_staging.cln_payments) cleaned_payment;

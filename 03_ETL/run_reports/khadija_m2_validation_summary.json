@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-18",
+  "pipeline_run": "run-20261118T092003",
+  "pipeline_stages_passed": 10,
+  "m2_rerun": "run-20261118T094519",
+  "validation_checks_passed": 47,
+  "validation_checks_failed": 0,
+  "cleaned_tables": {
+    "cln_customers": 99441,
+    "cln_order_items": 112650,
+    "cln_orders": 99441,
+    "cln_payments": 103886,
+    "cln_products": 32951,
+    "cln_reviews": 99224,
+    "cln_sellers": 3095,
+    "cln_zip_geo": 19010
+  },
+  "dimensions": {
+    "dim_customer": 96097,
+    "dim_date": 1097,
+    "dim_order_status": 9,
+    "dim_payment_type": 6,
+    "dim_product": 32952,
+    "dim_seller": 3096
+  },
+  "all_dimensions_unknown_members": 1,
+  "null_or_duplicate_surrogate_keys": 0,
+  "row_counts_stable_on_rerun": true,
+  "source": "user-provided Colab logs"
+}
