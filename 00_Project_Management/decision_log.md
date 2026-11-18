@@ -274,3 +274,6 @@ DEC-005 to DEC-014 were proposed on 2026-10-24 before the dataset was available.
 - **Status:** Accepted (defect fix)
 - **Context:** `profile_source.py` overwrote `summary["customers"]`, so `profiling_summary.json` had no customers row count. Phase 2 tests compare the source contract with that file.
 - **Decision:** Use `update()` instead of assignment and re-run profiling. `profiling_report.md` was byte-identical before and after; the JSON gained the missing `rows`, `full_row_duplicates` and `nulls` keys for customers.
+
+### DEC-034 (2026-11-18) — M2 cleaning and dimension implementation (pending integration review)
+Owner: M2 (Khadija). The cleaned hand-off tables use the exact Phase 2 section 3 names and types, with duplicate business keys resolved by latest staging row. Customer dimension geography uses the latest order and first purchase date uses the earliest order. Missing dates remain NULL for downstream unknown-date mapping. Timestamp sequence anomalies are preserved (TR-13). Missing product translations fall back to a readable label; the two known untranslated categories use explicit mappings. PostgreSQL `unaccent` is required for city normalization. Raw data is absent from the repository archive, so counts and reconciliation are pending a live pipeline run. M1 and M3 review required before merge.
