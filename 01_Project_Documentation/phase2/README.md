@@ -51,15 +51,15 @@ Each workstream is about 8 to 10 hours of work and owns one or two official deli
 - [ ] Final integration run once M2 and M3 scripts exist; publish the repository link
 
 ### M2: Khadija Faiz
-- [ ] `03_ETL/cleaning/*.sql` (or `.py`): build the `cln_*` tables in section 3 from `stg_*`, applying rules TR-01 to TR-15 (P1_07, Transformation_Rules sheet)
-- [ ] `03_ETL/dimensions/*.sql`: load `dim_date` (2016-01-01 to 2018-12-31), `dim_customer`, `dim_product`, `dim_seller`, `dim_payment_type`, `dim_order_status`. Each includes the `-1` unknown row (`INSERT ... OVERRIDING SYSTEM VALUE`)
-- [ ] Data Cleaning Report PDF: each rule with before/after counts (template `P2_02_Data_Cleaning_Report.pdf`)
-- [ ] Log every cleaning judgment call as a DEC entry
+- [x] `03_ETL/cleaning/*.sql` (or `.py`): build the `cln_*` tables in section 3 from `stg_*`, applying rules TR-01 to TR-15 (P1_07, Transformation_Rules sheet)
+- [x] `03_ETL/dimensions/*.sql`: load `dim_date` (2016-01-01 to 2018-12-31), `dim_customer`, `dim_product`, `dim_seller`, `dim_payment_type`, `dim_order_status`. Each includes the `-1` unknown row (`INSERT ... OVERRIDING SYSTEM VALUE`)
+- [x] Data Cleaning Report PDF: each rule with before/after counts (template `P2_02_Data_Cleaning_Report.pdf`)
+- [x] Log every cleaning judgment call as a DEC entry
 
 ### M3: Aliyah Rasheed
-- [ ] `03_ETL/facts/*.sql`: load `fact_order_items`, `fact_orders`, `fact_payments`, `fact_reviews` from `cln_*` through business-key → surrogate-key lookups (unmatched → -1). Per-order aggregates are computed before joining (TR-14, P1_05 rules G-01 to G-08)
-- [ ] `03_ETL/quality/*.sql`: completeness, accuracy and integrity checks that fail the stage on violation (`RAISE EXCEPTION`). Targets are in P1_05 §6, for example SUM(item_price) = 13,591,643.70 and orphan FKs = 0
-- [ ] Data Quality Report PDF (template `P2_03_Data_Quality_Report.pdf`)
+- [x] `03_ETL/facts/*.sql`: load `fact_order_items`, `fact_orders`, `fact_payments`, `fact_reviews` from `cln_*` through business-key → surrogate-key lookups (unmatched → -1). Per-order aggregates are computed before joining (TR-14, P1_05 rules G-01 to G-08)
+- [x] `03_ETL/quality/*.sql`: completeness, accuracy and integrity checks that fail the stage on violation (`RAISE EXCEPTION`). Targets are in P1_05 §6, for example SUM(item_price) = 13,591,643.70 and orphan FKs = 0
+- [x] Data Quality Report PDF (`01_Project_Documentation/phase2/P2_03_Data_Quality_Report.pdf`)
 
 ## 3. Hand-off contract: cleaned tables (`project_staging.cln_*`)
 
@@ -104,11 +104,11 @@ Stages 9 to 12 run every `*.sql` and `*.py` file in their folder in file-name or
 | PostgreSQL Database SQL scripts | `04_Data_Warehouse/database.sql`, `schemas.sql` | M1 | Done |
 | Staging Schema SQL | `03_ETL/staging/staging.sql`, `03_ETL/etl_metadata.sql` | M1 | Done |
 | DW Schema SQL | `04_Data_Warehouse/warehouse.sql` | M1 | Done |
-| ETL Scripts SQL/Python | `03_ETL/run_pipeline.py`, `staging/load_staging.py` (M1); `cleaning/` (M2); `facts/` (M3) | All | M1 part done |
-| Data Cleaning Report PDF | `01_Project_Documentation/phase2/P2_02_Data_Cleaning_Report.pdf` | M2 | Todo |
-| Dimension Load Scripts SQL | `03_ETL/dimensions/` | M2 | Todo |
-| Fact Load Scripts SQL | `03_ETL/facts/` | M3 | Todo |
-| Data Quality Report PDF | `01_Project_Documentation/phase2/P2_03_Data_Quality_Report.pdf` | M3 | Todo |
+| ETL Scripts SQL/Python | `03_ETL/run_pipeline.py`, `staging/load_staging.py` (M1); `cleaning/` (M2); `facts/` (M3) | All | Done |
+| Data Cleaning Report PDF | `01_Project_Documentation/phase2/P2_02_Data_Cleaning_Report.pdf` | M2 | Done |
+| Dimension Load Scripts SQL | `03_ETL/dimensions/01_dimensions.sql` | M2 | Done |
+| Fact Load Scripts SQL | `03_ETL/facts/01_facts.sql` | M3 | Done |
+| Data Quality Report PDF | `01_Project_Documentation/phase2/P2_03_Data_Quality_Report.pdf` | M3 | Done |
 | GitHub Repository Link | https://github.com/kashishfatima999/Olist_Commerce360 | M1 | Ready (after push) |
 
 ## 6. Definition of done (every member)
