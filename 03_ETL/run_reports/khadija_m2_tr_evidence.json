@@ -1,0 +1,235 @@
+{
+  "generated_utc": "2026-11-26T08:50:38.760166+00:00",
+  "source": "live PostgreSQL",
+  "rules": [
+    {
+      "id": "TR-01",
+      "title": "Business IDs / whitespace",
+      "owner": "M2 cleaning",
+      "explanation": "Nonblank IDs, trimmed keys and deduplication",
+      "metrics": {
+        "raw_blank_customer_ids": 0,
+        "raw_customer_id_whitespace": 0,
+        "after_blank_customer_ids": 0,
+        "after_duplicate_customer_ids": 0
+      }
+    },
+    {
+      "id": "TR-02",
+      "title": "ZIP prefix as padded text",
+      "owner": "M2 cleaning",
+      "explanation": "Preserve leading zeroes and five-character codes",
+      "metrics": {
+        "raw_customer_zip_under_5": 0,
+        "after_customer_zip_invalid": 0,
+        "after_customer_zip_leading_zero": 23995
+      }
+    },
+    {
+      "id": "TR-03",
+      "title": "City name normalization",
+      "owner": "M2 cleaning",
+      "explanation": "Trim, unaccent and title-case",
+      "metrics": {
+        "raw_customer_city_needs_normalizing": 99441,
+        "after_customer_city_noncanonical": 0,
+        "raw_seller_city_needs_normalizing": 3094,
+        "after_seller_city_noncanonical": 0
+      }
+    },
+    {
+      "id": "TR-04",
+      "title": "Timestamp parsing and date keys",
+      "owner": "M2 cleaning + dimensions",
+      "explanation": "Parse source timestamps; date dimension uses YYYYMMDD",
+      "metrics": {
+        "raw_approval_missing": 160,
+        "after_approval_null": 160,
+        "raw_delivery_missing": 2965,
+        "after_delivery_null": 2965,
+        "after_date_dimension_rows": 1097
+      }
+    },
+    {
+      "id": "TR-05",
+      "title": "Customer identity mapping",
+      "owner": "M2 dimension; M3 fact lookup",
+      "explanation": "Collapse order-specific IDs to unique customer identities",
+      "metrics": {
+        "raw_customer_ids": 99441,
+        "raw_unique_people": 96096,
+        "after_dim_customer_known": 96096,
+        "after_unknown_members": 1
+      }
+    },
+    {
+      "id": "TR-06",
+      "title": "Latest customer location (Type 1)",
+      "owner": "M2 dimension",
+      "explanation": "Select most recent purchase location per unique customer",
+      "metrics": {
+        "raw_people_multiple_zip": 250,
+        "after_duplicate_customer_business_keys": 0,
+        "after_customer_dimension_known": 96096
+      }
+    },
+    {
+      "id": "TR-07",
+      "title": "Missing and untranslated product categories",
+      "owner": "M2 cleaning",
+      "explanation": "Default missing categories; translate two exceptions",
+      "metrics": {
+        "raw_missing_categories": 610,
+        "after_uncategorized": 610,
+        "after_null_category_en": 0,
+        "after_manual_translations": 13
+      }
+    },
+    {
+      "id": "TR-08",
+      "title": "Correct product column spelling",
+      "owner": "M2 cleaning",
+      "explanation": "Rename *_lenght source fields to *_length target fields",
+      "metrics": {
+        "raw_typo_columns": 2,
+        "after_corrected_columns": 2,
+        "after_product_rows": 32951
+      }
+    },
+    {
+      "id": "TR-09",
+      "title": "Geolocation range filter and median",
+      "owner": "M2 cleaning",
+      "explanation": "Exclude out-of-range points, group by ZIP and calculate medians",
+      "metrics": {
+        "raw_geolocation_rows": 1000163,
+        "raw_outside_range": 42,
+        "raw_duplicate_full_rows": 261831,
+        "after_zip_medians": 19010,
+        "after_outside_range": 0
+      }
+    },
+    {
+      "id": "TR-10",
+      "title": "Unknown dimension members",
+      "owner": "M2 dimensions; M3 lookup",
+      "explanation": "One -1 record per dimension; downstream FK fallback belongs to M3",
+      "metrics": {
+        "after_unknown_members_total": 6,
+        "after_null_customer_keys": 0
+      }
+    },
+    {
+      "id": "TR-11",
+      "title": "Zero payment installments",
+      "owner": "M2 cleaning",
+      "explanation": "Replace zero installments with one",
+      "metrics": {
+        "raw_zero_installments": 2,
+        "after_zero_installments": 0,
+        "after_one_installment": 52548
+      }
+    },
+    {
+      "id": "TR-12",
+      "title": "Delivery lags and late-delivery measures",
+      "owner": "M3 facts \u2014 not M2",
+      "explanation": "M2 preserves timestamps; computed fact measures require M3",
+      "metrics": {
+        "after_orders_with_delivery_timestamp": 96476,
+        "after_orders_missing_delivery_timestamp": 2965
+      }
+    },
+    {
+      "id": "TR-13",
+      "title": "Out-of-sequence timestamps",
+      "owner": "M2 preserves; M3 flags",
+      "explanation": "Do not delete anomalous orders; flagging/negative lag exclusion belongs to M3",
+      "metrics": {
+        "raw_carrier_before_approval": 1359,
+        "after_carrier_before_approval": 1359,
+        "raw_delivery_before_carrier": 23,
+        "after_delivery_before_carrier": 23
+      }
+    },
+    {
+      "id": "TR-14",
+      "title": "Per-order aggregates before joins",
+      "owner": "M3 facts \u2014 not M2",
+      "explanation": "M2 supplies typed item/payment/review rows for downstream grouping",
+      "metrics": {
+        "after_clean_order_items": 112650,
+        "after_clean_payments": 103886,
+        "after_clean_reviews": 99224
+      }
+    },
+    {
+      "id": "TR-15",
+      "title": "UTF-8-SIG category file ingestion",
+      "owner": "M1 source loading \u2014 not M2",
+      "explanation": "M1 loader handles encoding; M2 joins translated categories",
+      "metrics": {
+        "raw_translation_rows": 71,
+        "after_translated_products": 32341
+      }
+    }
+  ],
+  "table_counts": [
+    {
+      "source": "stg_customers",
+      "target": "cln_customers",
+      "before": 99441,
+      "after": 99441,
+      "delta": 0
+    },
+    {
+      "source": "stg_orders",
+      "target": "cln_orders",
+      "before": 99441,
+      "after": 99441,
+      "delta": 0
+    },
+    {
+      "source": "stg_order_items",
+      "target": "cln_order_items",
+      "before": 112650,
+      "after": 112650,
+      "delta": 0
+    },
+    {
+      "source": "stg_order_payments",
+      "target": "cln_payments",
+      "before": 103886,
+      "after": 103886,
+      "delta": 0
+    },
+    {
+      "source": "stg_order_reviews",
+      "target": "cln_reviews",
+      "before": 99224,
+      "after": 99224,
+      "delta": 0
+    },
+    {
+      "source": "stg_products",
+      "target": "cln_products",
+      "before": 32951,
+      "after": 32951,
+      "delta": 0
+    },
+    {
+      "source": "stg_sellers",
+      "target": "cln_sellers",
+      "before": 3095,
+      "after": 3095,
+      "delta": 0
+    },
+    {
+      "source": "stg_geolocation",
+      "target": "cln_zip_geo",
+      "before": 1000163,
+      "after": 19010,
+      "delta": -981153
+    }
+  ]
+}
